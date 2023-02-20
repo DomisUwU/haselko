@@ -1,0 +1,96 @@
+﻿@page
+@model haselko.Pages.HasloModel
+@{
+}
+
+<h1>Generuj Haslo</h1>
+<form method="post">
+    <div class="row m-2">
+        <label class="col-2" asp-for="@Model.MojeHaslo.DlugoscHasla"></label>
+        <input type="number" class="col-4" asp-for="@Model.MojeHaslo.DlugoscHasla" />
+        <span class="text-danger col-6" asp-validation-for="@Model.MojeHaslo.DlugoscHasla"></span>
+    </div>
+
+    <div class="row m-2">
+        <label class="col-2" asp-for="@Model.MojeHaslo.Znaki"></label>
+        <div class="col-6">
+            @for (int i = 0; i < Model.MojeHaslo.Znaki.Count; i++)
+            {
+                <input type="checkbox" asp-for="@Model.MojeHaslo.Znaki[i].IsChecked" />
+                @Model.MojeHaslo.Znaki[i].Typ <br />
+                <input type="hidden" asp-for="@Model.MojeHaslo.Znaki[i].Typ" />
+
+            }
+        </div>
+    </div>
+
+    <div class="row m-2">
+
+        <input type="submit" class="offset-2 col-6 btn btn-primary" value="Generuj" />
+
+    </div>
+</form>
+
+@if(ViewData["post"]!=null){
+    <div>
+            Dlugosc hasla wynosi: @Model.MojeHaslo.DlugoscHasla<br>Dodati w hasle:
+    </div>
+    @if ((Model.MojeHaslo.Znaki.Where(w => w.IsChecked)).ToList().Count > 0)
+    {
+                    Random character = new Random();
+                    string podstawa = "abcdefghijklmnoprstuwyz";
+                    string cyfry = "1234567890";
+                    string duzeLitery = "ABCDEFGHIJKLMNOPRSTUWYZ";
+                    string znakiSpecjalne = "'&<>!@#$%^&()_+/-`~,.;:'[]{}=";
+
+        @foreach (var h in Model.MojeHaslo.Znaki)
+        {
+            if (h.IsChecked)
+            {
+                <li>@h.Typ</li>
+                if (h.Typ == "Cyfry")
+                {
+                    podstawa += cyfry;
+                }
+                if (h.Typ == "Duze litery")
+                {
+                    podstawa += duzeLitery;
+                }
+                if (h.Typ == "Znaki specjalne")
+                {
+                    podstawa += znakiSpecjalne;
+                }
+
+            }
+        }
+                    
+                    string wygenerowaneHaslo = "";
+                    for (int i = 0; i < @Model.MojeHaslo.DlugoscHasla; i++)
+                    {
+                        int randomnumber = character.Next(0, podstawa.Length);
+                        wygenerowaneHaslo += podstawa[randomnumber];
+                    }
+        <div>
+            <br>
+            Wygenerowane haslo: <br>@wygenerowaneHaslo
+        </div>
+    }
+    else
+    {
+        Random character = new Random();
+        string podstawa = "abcdefghijklmnoprstuwyz";
+        <div>Brak dodatkow w hasle</div>
+        string wygenerowaneHaslo = "";
+        for (int i = 0; i < @Model.MojeHaslo.DlugoscHasla; i++)
+        {
+            int randomnumber = character.Next(0, podstawa.Length);
+            wygenerowaneHaslo += podstawa[randomnumber];
+        }
+        <div>
+            <br>
+            Wygenerowane haslo:<br> @wygenerowaneHaslo
+        </div>
+    }
+
+
+}
