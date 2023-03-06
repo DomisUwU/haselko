@@ -32,13 +32,11 @@
 </form>
 
 @if(ViewData["post"]!=null){
-    <div>
-            Dlugosc hasla wynosi: @Model.MojeHaslo.DlugoscHasla<br>Dodati w hasle:
-    </div>
     @if ((Model.MojeHaslo.Znaki.Where(w => w.IsChecked)).ToList().Count > 0)
     {
                     Random character = new Random();
-                    string podstawa = "abcdefghijklmnoprstuwyz";
+                    string podstawa = "";
+                    string male = "abcdefghijklmnoprstuwyz";
                     string cyfry = "1234567890";
                     string duzeLitery = "ABCDEFGHIJKLMNOPRSTUWYZ";
                     string znakiSpecjalne = "'&<>!@#$%^&()_+/-`~,.;:'[]{}=";
@@ -47,7 +45,6 @@
         {
             if (h.IsChecked)
             {
-                <li>@h.Typ</li>
                 if (h.Typ == "Cyfry")
                 {
                     podstawa += cyfry;
@@ -60,8 +57,12 @@
                 {
                     podstawa += znakiSpecjalne;
                 }
-
+            if (podstawa == "")
+            {
+                podstawa = male;
             }
+            }
+            
         }
                     
                     string wygenerowaneHaslo = "";
@@ -79,7 +80,6 @@
     {
         Random character = new Random();
         string podstawa = "abcdefghijklmnoprstuwyz";
-        <div>Brak dodatkow w hasle</div>
         string wygenerowaneHaslo = "";
         for (int i = 0; i < @Model.MojeHaslo.DlugoscHasla; i++)
         {
